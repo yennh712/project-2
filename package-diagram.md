@@ -1,60 +1,61 @@
 ```mermaid
 flowchart TB
     %% TẦNG GIAO DIỆN (PRESENTATION LAYER)
-    subgraph PresentationLayer ["Tầng Giao diện (Presentation Layer)"]
+    subgraph PresentationLayer ["Tầng Giao diện (Presentation Layer - Vue.js)"]
         direction TB
-        subgraph ViewPages ["Gói Trang (Pages)"]
+        subgraph Pages ["Gói Trang (Pages)"]
             direction LR
-            P1[DashboardPage]
-            P2[ProductPage]
-            P3[MockupEditorPage]
-            P4[OrderListPage]
-            P5[OrderDetailPage]
+            P1[Dashboard]
+            P2[ProductList]
+            P3[ProductDetail]
+            P4[OrderList]
+            P5[OrderDetail]
+            P6[Login]
         end
-        subgraph ViewComponents ["Gói Thành phần (Components)"]
+        subgraph Components ["Gói Thành phần (Components)"]
             direction LR
-            C1[MockupCanvas]
-            C2[OrderTable]
-            C3[StatusStepper]
-            C4[UI_Elements]
+            C1[MockupUploader]
+            C2[PrintAreaConfig]
+            C3[VariantManager]
+            C4[CommonUI]
         end
-        ViewPages -.-> ViewComponents
+        Pages -.-> Components
     end
 
     %% TẦNG ỨNG DỤNG (APPLICATION LAYER)
-    subgraph ApplicationLayer ["Tầng Ứng dụng (Application Layer)"]
+    subgraph ApplicationLayer ["Tầng Ứng dụng (Application Layer - Controller/Service)"]
         direction TB
-        subgraph BusinessServices ["Gói Dịch vụ (Services)"]
+        subgraph Controllers ["Gói Điều khiển (Controllers)"]
+            direction LR
+            CTL1[ProductController]
+            CTL2[OrderController]
+            CTL3[AuthController]
+        end
+        subgraph Services ["Gói Dịch vụ (Services)"]
             direction LR
             S1[ProductService]
-            S2[MockupService]
-            S3[OrderService]
-            S4[AuthService]
+            S2[OrderService]
+            S3[AuthService]
         end
-        subgraph Integration ["Gói Tích hợp (Integration)"]
-            Client[SupabaseClient]
-        end
-        BusinessServices -.-> Integration
+        Controllers -.-> Services
     end
 
     %% TẦNG DỮ LIỆU (DATA LAYER)
-    subgraph DataLayer ["Tầng Dữ liệu (Data Layer)"]
+    subgraph DataLayer ["Tầng Dữ liệu (Data Layer - Supabase)"]
         direction TB
-        subgraph DBData ["Cơ sở dữ liệu (PostgreSQL)"]
-            direction LR
-            T1[(Products)]
-            T2[(Mockups)]
-            T3[(Orders)]
-            T4[(Order_Items)]
+        subgraph Client ["Gói Truy cập (Client)"]
+            SC[SupabaseClient]
         end
-        subgraph StorageData ["Lưu trữ (Storage)"]
+        subgraph SupabaseModules ["Supabase Infrastructure"]
             direction LR
-            B1[Mockup_Files]
-            B2[Design_Assets]
+            Auth[Supabase Auth]
+            DB[(PostgreSQL)]
+            ST[Storage]
         end
+        SC -.-> SupabaseModules
     end
 
-    %% Mối quan hệ phụ thuộc tuân thủ quy tắc thiết kế
-    PresentationLayer -.-> ApplicationLayer
-    ApplicationLayer -.-> DataLayer
+    %% MỐI QUAN HỆ PHỤ THUỘC (DEPENDENCIES)
+    PresentationLayer ==> ApplicationLayer
+    ApplicationLayer ==> Client
 ```
