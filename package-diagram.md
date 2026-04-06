@@ -1,4 +1,4 @@
-mermaid
+```mermaid
 
 packageDiagram
     %% Presentation Layer
@@ -54,3 +54,4 @@ packageDiagram
     "Presentation Layer (Vue)" ..> "Application Layer (Frontend Logic)" : uses
     "Application Layer (Frontend Logic)" ..> "SupabaseClient" : uses
     "SupabaseClient" ..> "Data Layer (Supabase BaaS)" : interacts via API
+```
