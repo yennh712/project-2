@@ -1,6 +1,6 @@
 ```mermaid
 flowchart TB
-    %% Tầng Presentation - Chỉ chứa logic hiển thị
+    %% TẦNG GIAO DIỆN (PRESENTATION LAYER)
     subgraph PresentationLayer ["Tầng Giao diện (Presentation Layer)"]
         direction TB
         subgraph ViewPages ["Gói Trang (Pages)"]
@@ -8,24 +8,27 @@ flowchart TB
             P1[DashboardPage]
             P2[ProductPage]
             P3[MockupEditorPage]
+            P4[OrderListPage]
+            P5[OrderDetailPage]
         end
         subgraph ViewComponents ["Gói Thành phần (Components)"]
             direction LR
             C1[MockupCanvas]
-            C2[ImageUploader]
-            C3[UI_Elements]
+            C2[OrderTable]
+            C3[StatusStepper]
+            C4[UI_Elements]
         end
         ViewPages -.-> ViewComponents
     end
 
-    %% Tầng Application - Chứa logic nghiệp vụ điều phối
+    %% TẦNG ỨNG DỤNG (APPLICATION LAYER)
     subgraph ApplicationLayer ["Tầng Ứng dụng (Application Layer)"]
         direction TB
         subgraph BusinessServices ["Gói Dịch vụ (Services)"]
             direction LR
             S1[ProductService]
             S2[MockupService]
-            S3[PrintAreaService]
+            S3[OrderService]
             S4[AuthService]
         end
         subgraph Integration ["Gói Tích hợp (Integration)"]
@@ -34,17 +37,15 @@ flowchart TB
         BusinessServices -.-> Integration
     end
 
-    %% Tầng Data - Quản lý lưu trữ và dữ liệu gốc
-    subgraph DataLayer ["Tầng Dữ liệu (Data Layer - Supabase)"]
+    %% TẦNG DỮ LIỆU (DATA LAYER)
+    subgraph DataLayer ["Tầng Dữ liệu (Data Layer)"]
         direction TB
-        subgraph AuthData ["Xác thực (Auth)"]
-            UserTable[User_Account]
-        end
         subgraph DBData ["Cơ sở dữ liệu (PostgreSQL)"]
             direction LR
             T1[(Products)]
             T2[(Mockups)]
-            T3[(PrintAreas)]
+            T3[(Orders)]
+            T4[(Order_Items)]
         end
         subgraph StorageData ["Lưu trữ (Storage)"]
             direction LR
@@ -53,7 +54,7 @@ flowchart TB
         end
     end
 
-    %% Các mối quan hệ phụ thuộc tuân thủ quy tắc thiết kế
-    PresentationLayer ==> ApplicationLayer
-    ApplicationLayer ==> DataLayer
+    %% Mối quan hệ phụ thuộc tuân thủ quy tắc thiết kế
+    PresentationLayer -.-> ApplicationLayer
+    ApplicationLayer -.-> DataLayer
 ```
