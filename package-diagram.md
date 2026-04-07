@@ -1,61 +1,112 @@
 ```mermaid
 flowchart TB
-    %% TẦNG GIAO DIỆN (PRESENTATION LAYER)
-    subgraph PresentationLayer ["Tầng Giao diện (Presentation Layer - Vue.js)"]
-        direction TB
-        subgraph Pages ["Gói Trang (Pages)"]
-            direction LR
-            P1[Dashboard]
-            P2[ProductList]
-            P3[ProductDetail]
-            P4[OrderList]
-            P5[OrderDetail]
-            P6[Login]
-        end
-        subgraph Components ["Gói Thành phần (Components)"]
-            direction LR
-            C1[MockupUploader]
-            C2[PrintAreaConfig]
-            C3[VariantManager]
-            C4[CommonUI]
-        end
-        Pages -.-> Components
+
+%% ========================
+%% PRESENTATION LAYER (VIEW)
+%% ========================
+subgraph PresentationLayer ["Presentation Layer (View - Vue.js)"]
+    direction TB
+
+    subgraph Pages ["Pages"]
+        direction LR
+        Dashboard[Dashboard]
+        ProductList[ProductList]
+        ProductDetail[ProductDetail]
+        OrderList[OrderList]
+        OrderDetail[OrderDetail]
+        Login[Login]
     end
 
-    %% TẦNG ỨNG DỤNG (APPLICATION LAYER)
-    subgraph ApplicationLayer ["Tầng Ứng dụng (Application Layer - Controller/Service)"]
-        direction TB
-        subgraph Controllers ["Gói Điều khiển (Controllers)"]
-            direction LR
-            CTL1[ProductController]
-            CTL2[OrderController]
-            CTL3[AuthController]
-        end
-        subgraph Services ["Gói Dịch vụ (Services)"]
-            direction LR
-            S1[ProductService]
-            S2[OrderService]
-            S3[AuthService]
-        end
-        Controllers -.-> Services
+    subgraph Components ["Components"]
+        direction LR
+        MockupUploader
+        PrintAreaConfig
+        VariantManager
+        DesignPreview
+        OrderTable
+        CustomerInfoCard
+        OrderProductList
+        OrderActionButtons
     end
 
-    %% TẦNG DỮ LIỆU (DATA LAYER)
-    subgraph DataLayer ["Tầng Dữ liệu (Data Layer - Supabase)"]
-        direction TB
-        subgraph Client ["Gói Truy cập (Client)"]
-            SC[SupabaseClient]
-        end
-        subgraph SupabaseModules ["Supabase Infrastructure"]
-            direction LR
-            Auth[Supabase Auth]
-            DB[(PostgreSQL)]
-            ST[Storage]
-        end
-        SC -.-> SupabaseModules
+    Pages --> Components
+end
+
+%% ========================
+%% APPLICATION LAYER (CONTROLLER)
+%% ========================
+subgraph ApplicationLayer ["Application Layer (Controller)"]
+    direction TB
+
+    subgraph Controllers ["Controllers"]
+        direction LR
+        ProductController
+        OrderController
+        AuthController
     end
 
-    %% MỐI QUAN HỆ PHỤ THUỘC (DEPENDENCIES)
-    PresentationLayer ==> ApplicationLayer
-    ApplicationLayer ==> Client
+    subgraph Services ["Services"]
+        direction LR
+        ProductService
+        VariantService
+        MockupService
+        PrintAreaService
+        OrderService
+        AuthService
+    end
+
+    Controllers --> Services
+end
+
+%% ========================
+%% DATA LAYER (MODEL)
+%% ========================
+subgraph DataLayer ["Data Layer (Model - Supabase)"]
+    direction TB
+
+    subgraph Client ["Supabase Client"]
+        SupabaseClient
+    end
+
+    subgraph Supabase ["Supabase"]
+        direction TB
+
+        subgraph AuthModule ["Auth"]
+            Users[(users)]
+        end
+
+        subgraph Database ["PostgreSQL Database"]
+            Products[(products)]
+            Variants[(variants)]
+            Mockups[(mockups)]
+            PrintAreas[(print_areas)]
+            Designs[(designs)]
+            Orders[(orders)]
+            OrderItems[(order_items)]
+        end
+
+        subgraph Storage ["Storage"]
+            MockupImages
+            DesignFiles
+        end
+    end
+
+    SupabaseClient --> Users
+    SupabaseClient --> Products
+    SupabaseClient --> Variants
+    SupabaseClient --> Mockups
+    SupabaseClient --> PrintAreas
+    SupabaseClient --> Designs
+    SupabaseClient --> Orders
+    SupabaseClient --> OrderItems
+    SupabaseClient --> MockupImages
+    SupabaseClient --> DesignFiles
+end
+
+%% ========================
+%% LAYER DEPENDENCIES
+%% ========================
+
+PresentationLayer --> ApplicationLayer
+ApplicationLayer --> SupabaseClient
 ```
